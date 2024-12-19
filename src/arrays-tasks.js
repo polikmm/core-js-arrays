@@ -20,8 +20,9 @@
  *    getIntervalArray(0, 100) => [ 0, 1, 2, ..., 100 ]
  *    getIntervalArray(3, 3) => [ 3 ]
  */
-function getIntervalArray(/* start, end */) {
-  throw new Error('Not implemented');
+function getIntervalArray(start, end) {
+  const len = start < 0 ? start * -1 + end + 1 : end - start + 1;
+  return Array.from({ length: len }, (_, idx) => start + idx);
 }
 
 /**
@@ -37,8 +38,12 @@ function getIntervalArray(/* start, end */) {
  *    sumArrays([10, 20, 30], [5, 10, 15]) => [15, 30, 45]
  *    sumArrays([-1, 0, 1], [1, 2, 3, 4]) => [0, 2, 4, 4]
  */
-function sumArrays(/* arr1, arr2 */) {
-  throw new Error('Not implemented');
+function sumArrays(arr1, arr2) {
+  const max = arr1.length >= arr2.length ? arr1 : arr2;
+  let min = arr1.length < arr2.length ? arr1 : arr2;
+  const dif = max.slice(min.length).fill(0);
+  min = min.concat(dif);
+  return max.map((elem, idx) => elem + min[idx]);
 }
 
 /**
@@ -259,8 +264,11 @@ function distinct(arr) {
  *    createNDimensionalArray(4, 2) => [[[[0, 0], [0, 0]], [[0, 0], [0, 0]]], [[[0, 0], [0, 0]], [[0, 0], [0, 0]]]]
  *    createNDimensionalArray(1, 1) => [0]
  */
-function createNDimensionalArray(/* n, size */) {
-  throw new Error('Not implemented');
+function createNDimensionalArray(n, size) {
+  if (n === 1) {
+    return new Array(size).fill(0);
+  }
+  return new Array(size).fill(createNDimensionalArray(n - 1, size));
 }
 
 /**
@@ -326,8 +334,13 @@ function calculateBalance(arr) {
  *    createChunks(['a', 'b', 'c', 'd', 'e'], 2) => [['a', 'b'], ['c', 'd'], ['e']]
  *    createChunks([10, 20, 30, 40, 50], 1) => [[10], [20], [30], [40], [50]]
  */
-function createChunks(/* arr, chunkSize */) {
-  throw new Error('Not implemented');
+function createChunks(arr, chunkSize) {
+  const result = [];
+  return arr.reduce((res, elem, idx) => {
+    const subArr = arr.slice(idx * chunkSize, idx * chunkSize + chunkSize);
+    if (subArr.length) res.push(subArr);
+    return res;
+  }, result);
 }
 
 /**
@@ -428,8 +441,10 @@ function getIndicesOfOddNumbers(numbers) {
  *    getHexRGBValues([ 0, 255, 16777215]) => [ '#000000', '#0000FF', '#FFFFFF' ]
  *    getHexRGBValues([]) => []
  */
-function getHexRGBValues(/* arr */) {
-  throw new Error('Not implemented');
+function getHexRGBValues(arr) {
+  return arr.map(
+    (num) => `#${num.toString(16).toUpperCase().padStart(6, '0')}`
+  );
 }
 
 /**
@@ -479,8 +494,22 @@ function findCommonElements(arr1, arr2) {
  *    findLongestIncreasingSubsequence([3, 10, 2, 1, 20]) => 2
  *    findLongestIncreasingSubsequence([50, 3, 10, 7, 40, 80]) => 3
  */
-function findLongestIncreasingSubsequence(/* nums */) {
-  throw new Error('Not implemented');
+function findLongestIncreasingSubsequence(nums) {
+  let len = 1;
+  const max = nums.reduce((arr, num, idx) => {
+    if (nums[idx - 1] < num) {
+      len += 1;
+    }
+    if (nums[idx - 1] > num) {
+      arr.push(len);
+      len = 1;
+    }
+    if (idx === nums.length - 1) {
+      arr.push(len);
+    }
+    return arr;
+  }, []);
+  return Math.max(...max);
 }
 
 /**
